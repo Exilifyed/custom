@@ -1,0 +1,37 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({Name = "Tapping Simulator Made By Exilifiyed", HidePremium = false,IntroText = "Exilifiyed", SaveConfig = true, ConfigFolder = "OrionTest"})
+
+-- Values
+getgenv().AutoTap = true
+
+
+
+-- Functions
+function AutoTap()
+    while getgenv().AutoTap == true do
+        local args = {[1] = "Main"}
+        game:GetService("ReplicatedStorage").Events.Tap:FireServer(unpack(args))
+        wait()
+     end
+  end  
+
+ -- Tabs 
+local FarmTab = Window:MakeTab({
+	Name = "AutoFarm",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+
+
+-- Toggles
+FarmTab:AddToggle({
+	Name = "AutoTap",
+	Default = false,
+	Callback = function(Value)
+		getgenv().AutoTap = Value 
+        AutoTap()
+	end    
+})
+
+OrionLib:Init()
