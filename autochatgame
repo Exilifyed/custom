@@ -1,5 +1,5 @@
 --// Settings \\--
-local MessageDelay = {1} 
+local MessageDelay = {2, 5} 
 
 --// Services \\--
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
