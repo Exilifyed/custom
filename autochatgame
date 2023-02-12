@@ -1,0 +1,45 @@
+--// Settings \\--
+local MessageDelay = {1} 
+
+--// Services \\--
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+
+--// Variables \\--
+local SayMessage = ReplicatedStorage:WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
+local Leaderboards = Workspace:WaitForChild("Leaderboards")
+
+--// Auto Questions \\--
+ReplicatedStorage:WaitForChild("RemoteEvents"):WaitForChild("SendCustomMessage").OnClientEvent:Connect(function(a)
+    warn(a)
+    local Random = math.random(MessageDelay[1]*10, MessageDelay[2]*10)/10
+    task.wait(Random)
+    if string.find(a, "Question") then
+        if string.find(a, "top 1 player") then
+            a = string.split(a, "in the ")[2]
+            a = string.split(a, " leaderboard")[1]
+            local LB = a == "Donations" and "RobuxSpent" or a
+            local List = Leaderboards["GlobalLB_" .. LB].GlobalLBGui.List
+            while #List:GetChildren() < 30 do
+                task.wait(0.1)
+            end
+            for _, V in next, List:GetChildren() do
+                if V:IsA("Frame") and V.Rank.Text == "#1" then
+                    SayMessage:FireServer(V.PlrName.Text, "All")
+                    task.wait()
+                    Players:Chat(V.PlrName.Text)
+                    break
+                end
+            end
+        elseif string.find(a, "= ?") then
+            a = string.split(a, ">: ")[2]
+            a = string.split(a, " =")[1]
+            a = "return " .. a
+            local Answer = loadstring(a)()
+            SayMessage:FireServer(Answer, "All")
+            task.wait()
+            Players:Chat(Answer)
+        end
+    end
+end)
